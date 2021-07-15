@@ -17,7 +17,7 @@ function getFileData() {
 }
 
 // 获取数组中的对象值,并转化为空格隔开的字符串
-// 例如：[{name:'测试',startTime:'2021-06-18 12:00',endTime:'2021-06-18 18:00'}]
+// 例如：[{name:'测试',endTime:'2021-06-18 18:00'}]
 // 会转化为[ '测试 2021-06-18 12:00 2021-06-18 18:00' ]
 function getValueFormArray(arr) {
   return arr.map((item) => Object.values(item).join(' '));
