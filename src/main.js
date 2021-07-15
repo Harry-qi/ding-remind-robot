@@ -7,6 +7,7 @@ const {
   targetPath,
   getValueFormArray,
   getReadMe,
+  sendTaskMsg,
 } = require('./utils/index');
 const { tipsObj } = require('./utils/tips');
 
@@ -63,6 +64,7 @@ function handleText(text) {
     sendMsg(getReadMe(), true);
   }
 }
+sendTaskMsg();
 app.post('/getMessage', (req, res) => {
   let content = {};
   try {
