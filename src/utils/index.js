@@ -39,16 +39,36 @@ function isIncludes(dataBase, targetArr) {
 function writeFile(p, data) {
   fs.writeFileSync(p, JSON.stringify(data, null, 2));
 }
-module.exports = {
-  getValueFormArray,
-  getFileData,
-  isIncludes,
-  targetPath,
-  writeFile,
-  getReadMe() {
-    return fs.readFileSync(readMePath, 'utf8');
-  },
-  saveData: (data) => new Promise((resolve, reject) => {
+// 发送钉钉消息
+function sendMsg(msg, isMarkdown = false) {
+  const url = 'https://oapi.dingtalk.com/robot/send?access_token=e8fea6a1b0a901d6801571a77b1421ebfcf0d9011001aec28bb6ade1b7960887';
+  const options = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  };
+  if (isMarkdown) {
+    options.body = JSON.stringify({
+      msgtype: 'markdown',
+      markdown: { title: '说明', text: msg },
+    });
+  } else {
+    options.body = JSON.stringify({
+      msgtype: 'text',
+      text: { content: msg },
+    });
+  }
+  fetch(url, options).then((res) => res.json())
+    .then((body) => console.log(body));
+}
+// 获取README.md文件
+function getReadMe() {
+  return fs.readFileSync(readMePath, 'utf8');
+}
+// 保存数据
+function saveData(data) {
+  return new Promise((resolve, reject) => {
     try {
       // 已存在的数据返回40001
       const dataBase = getFileData();
@@ -63,28 +83,17 @@ module.exports = {
     } catch (err) {
       reject(err);
     }
-  }),
-  // 发送钉钉消息
-  sendMsg: (msg, isMarkdown = false) => {
-    const url = 'https://oapi.dingtalk.com/robot/send?access_token=e8fea6a1b0a901d6801571a77b1421ebfcf0d9011001aec28bb6ade1b7960887';
-    const options = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
-    if (isMarkdown) {
-      options.body = JSON.stringify({
-        msgtype: 'markdown',
-        markdown: { title: '说明', text: msg },
-      });
-    } else {
-      options.body = JSON.stringify({
-        msgtype: 'text',
-        text: { content: msg },
-      });
-    }
-    fetch(url, options).then((res) => res.json())
-      .then((body) => console.log(body));
-  },
+  });
+}
+
+// 定时发送消息
+module.exports = {
+  getValueFormArray,
+  getFileData,
+  isIncludes,
+  targetPath,
+  writeFile,
+  getReadMe,
+  saveData,
+  sendMsg,
 };
