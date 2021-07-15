@@ -48,22 +48,22 @@ module.exports = {
   getReadMe() {
     return fs.readFileSync(readMePath, 'utf8');
   },
-  saveData: (data) => {
+  saveData: (data) => new Promise((resolve, reject) => {
     try {
       // 已存在的数据返回40001
       const dataBase = getFileData();
       const strData = getValueFormArray(data);
       if (isIncludes(dataBase, strData)) {
-        return 4001;
+        resolve(4001);
       }
       dataBase.push(strData);
       writeFile(targetPath, dataBase.flat());
-      return 2000;
+      resolve(2000);
       // 文件写入成功。
     } catch (err) {
-      console.error(err);
+      reject(err);
     }
-  },
+  }),
   // 发送钉钉消息
   sendMsg: (msg, isMarkdown = false) => {
     const url = 'https://oapi.dingtalk.com/robot/send?access_token=e8fea6a1b0a901d6801571a77b1421ebfcf0d9011001aec28bb6ade1b7960887';

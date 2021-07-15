@@ -16,12 +16,13 @@ app.use(express.json()); // for parsing application/json
 app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
 // 新增数据
-function addData({ data }) {
-  const tip = tipsObj[saveData(data)];
+async function addData({ data }) {
+  const code = await saveData(data);
+  const tip = tipsObj[code];
   sendMsg(tip);
   return {
     message: '成功',
-    code: saveData(data),
+    code,
   };
 }
 // 更新数据
